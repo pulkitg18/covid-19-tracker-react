@@ -1,62 +1,99 @@
+.app {
+  flex-direction: column;
+}
 * {
   margin: 0;
 }
 
-.app__header {
-  display: flex;
-  justify-content: space-between;
-  align-self: center;
-  margin-bottom: 20px;
-  /* margin-top: 10px; */
-  color: red;
+body {
+  background-color: #f5f6fa;
 }
 
-.app__header__dropdown {
+.app {
+  padding: 20px;
+}
+
+.app__dropdown {
   background-color: white;
+}
+.app__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  justify-content: space-between;
+}
+
+.app__left {
+  flex: 0.9;
 }
 .app__stats {
   display: flex;
   justify-content: space-between;
-  align-self: center;
 }
-
-body {
-  background-color: #eee2e7;
-}
-
-.app {
+.app__right {
   display: flex;
-  justify-content: space-evenly;
-  padding-top: 20px;
   flex-direction: column;
 }
 
-.app__top {
+.app__right .MuiCardContent-root {
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.app__graph {
+  flex-grow: 1;
+}
+.makeStyles-container-9 {
+  max-height: 400px !important;
+  /* width: 500px !important; */
+  scrollbar-width: thin;
 }
 
+.app__graphTitle {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.makeStyles-root-5 {
+  width: 560px !important;
+}
+.MuiCard-root {
+  margin-top: 50px !important;
+}
+.MuiCardContent-root:last-child {
+  display: flex;
+
+  padding-bottom: 24px;
+}
+.chartjs-render-monitor {
+  width: 800px !important;
+  height: 365px !important;
+}
 .app__bottom {
-  margin: 20px;
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  flex: 1;
+  justify-content: space-between;
 }
-.app__left {
-  flex: 0.8;
-}
-
-@media (max-width: 1200px) {
-  .app {
+@media (max-width: 900px) {
+  .MuiCardContent-root:last-child {
+    display: flex;
     flex-direction: column;
+    padding-bottom: 24px;
+  }
+  .makeStyles-root-5 {
+    width: 350px !important;
+  }
+  .chartjs-render-monitor {
+    width: 350px !important;
+    height: auto !important;
+  }
+  .app__bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .map {
+    width: 100vw;
   }
 }
-.app__middle {
-  padding: 0;
-}
-
 .app__copyright {
   color: grey;
   font-weight: 800;
