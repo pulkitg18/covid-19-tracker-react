@@ -9,7 +9,7 @@ import Map from "./Map";
 import DataTable from "./DataTable";
 import LineGraph from "./LineGraph";
 import "leaflet/dist/leaflet.css";
-import { prettyPrintStat } from "./utils.js";
+import { prettyPrintStat } from "./util.js";
 import { TwitterTimelineEmbed } from "react-twitter-embed";
 
 function App() {
