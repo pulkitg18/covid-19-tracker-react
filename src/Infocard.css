@@ -1,0 +1,35 @@
+.card {
+  text-align: center;
+  flex: 1;
+  cursor: pointer;
+}
+
+.card:not(:last-child) {
+  margin-right: 15px;
+}
+
+.card__cases {
+  color: #cc1034 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  margin-bottom: 0px !important;
+}
+
+.card__total {
+  /* color: #6c757d    !important; */
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  /* margin-top: 15px !important; */
+}
+
+.card--cases {
+  border-top: 10px solid #f91867;
+}
+
+.card--recovered {
+  border-top: 10px solid #7dd71d;
+}
+
+.card--deaths {
+  border-top: 10px solid #cc1034;
+}

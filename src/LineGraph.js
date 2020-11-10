@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import numeral from "numeral";
+import "./LineGraph.css";
 
 const options = {
   legend: {
@@ -11,7 +12,7 @@ const options = {
       radius: 0,
     },
   },
-  maintainAspectRatio: false,
+  maintainAspectRatio: true,
   tooltips: {
     mode: "index",
     intersect: false,
@@ -26,7 +27,7 @@ const options = {
       {
         type: "time",
         time: {
-          format: "MM/DD/YY",
+          parser: "MM/DD/YY",
           tooltipFormat: "ll",
         },
       },
@@ -37,7 +38,6 @@ const options = {
           display: false,
         },
         ticks: {
-          // Include a dollar sign in the ticks
           callback: function (value, index, values) {
             return numeral(value).format("0a");
           },
@@ -47,56 +47,93 @@ const options = {
   },
 };
 
-const buildChartData = (data, casesType) => {
-  let chartData = [];
-  let lastDataPoint;
-  for (let date in data.cases) {
-    if (lastDataPoint) {
-      let newDataPoint = {
-        x: date,
-        y: data[casesType][date] - lastDataPoint,
-      };
-      chartData.push(newDataPoint);
-    }
-    lastDataPoint = data[casesType][date];
-  }
-  return chartData;
+const casesTypeColors = {
+  cases: {
+    hex: "#f91867",
+    rgba: "rgb(249, 24, 103, 0.5)",
+  },
+  recovered: {
+    hex: "#7dd71d",
+    rgba: "rgb(125, 215, 29, 0.5)",
+  },
+  deaths: {
+    hex: "#CC1034",
+    rgba: "rgb(204, 16, 52, 0.8)",
+  },
 };
 
-function LineGraph({ casesType="cases", ...props }) {
-  const [data, setData] = useState({});
+function LineGraph(props) {
+  const [casesData, setCasesData] = useState({});
+
+  //function for converting API data into format compatible for LineGraph
+  const getChartData = (data, caseType) => {
+    const chartData = [];
+    let lastDataPoint;
+
+    for (let date in data[caseType]) {
+      if (lastDataPoint) {
+        const newDataPoint = {
+          x: date,
+          y: data[caseType][date] - lastDataPoint,
+        };
+        chartData.push(newDataPoint);
+      }
+      lastDataPoint = data[caseType][date];
+    }
+    return chartData;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      await fetch("https://disease.sh/v3/covid-19/historical/all?lastdays=120")
-        .then((response) => {
-          return response.json();
-        })
-        .then((data) => {
-          let chartData = buildChartData(data, casesType);
-          setData(chartData);
-          console.log(chartData);
-          // buildChart(chartData);
-        });
-    };
+    let specificCountry = false;
+    let url = "";
 
+    if (props.selectedCountry === undefined || props.selectedCountry === "WW") {
+      url = "https://disease.sh/v3/covid-19/historical/all?lastdays=90";
+    } else {
+      url = `https://disease.sh/v3/covid-19/historical/${props.selectedCountry}?lastdays=90`;
+      specificCountry = true;
+    }
+
+    const fetchData = async () => {
+      let chartData;
+      try {
+        await fetch(url) //async await...Call to get data from external API
+          .then((response) => response.json())
+          .then((data) => {
+            if (specificCountry) {
+              chartData = getChartData(data.timeline, props.casesType);
+            } else {
+              chartData = getChartData(data, props.casesType);
+            }
+            setCasesData(chartData);
+          });
+      } catch (e) {
+        console.log("404 error");
+      }
+    };
     fetchData();
-  }, [casesType]);
+  }, [props.selectedCountry, props.casesType]);
 
   return (
-    <div className={props.className}>
-      {data?.length > 0 && (
+    <div className="graph">
+      <h3>
+        {props.selectedCountryName} New {props.casesType}
+      </h3>
+      {casesData?.length > 0 && (
         <Line
+          className="graph__linegraph"
+          options={options}
+          // width = {200}
+          // height = {150}
           data={{
             datasets: [
               {
-                backgroundColor: "rgba(204, 16, 52, 0.5)",
-                borderColor: "#CC1034",
-                data: data,
+                data: casesData,
+                backgroundColor: casesTypeColors[props.casesType].rgba,
+                borderColor: casesTypeColors[props.casesType].hex,
               },
             ],
           }}
-          options={options}
         />
       )}
     </div>

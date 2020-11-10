@@ -1,0 +1,10 @@
+.graph__buttons {
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 10px;
+}
+
+.graph__linegraph {
+  height: 300px;
+  max-width: 400px;
+}
